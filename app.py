@@ -32,6 +32,28 @@ if uploaded_file is not None:
     st.subheader("📋 Prévia dos Dados")
     st.dataframe(df.head())
 
+
+# ================================================
+# FILTRO DE LÍDER
+# ================================================
+st.sidebar.header("🔍 Filtros")
+
+# Lista de líderes disponíveis
+lideres = sorted(df['lider'].dropna().unique().tolist())
+
+# Seletor de múltiplos líderes
+lideres_selecionados = st.sidebar.multiselect(
+    "Selecione um ou mais líderes:",
+    options=lideres,
+    default=lideres  # por padrão mostra todos
+)
+
+# Filtrar DataFrame com base na seleção
+df = df[df['lider'].isin(lideres_selecionados)]
+
+st.sidebar.markdown(f"**{len(df)} registros** após o filtro.")
+
+
     # ================================================
     # TRATAMENTO DE DADOS
     # ================================================
