@@ -2,6 +2,7 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+import io
 
 # ================================================
 # CONFIGURAÇÃO BÁSICA
@@ -23,9 +24,10 @@ uploaded_file = st.file_uploader("Selecione o arquivo CSV", type=["csv"])
 if uploaded_file is not None:
     # Leitura dos dados
     try:
-        df = pd.read_csv(uploaded_file, sep=";")
+        df = pd.read_csv(uploaded_file, sep=";", encoding="utf-8")
     except UnicodeDecodeError:
-        df = pd.read_csv(uploaded_file, sep=";", encoding="latin-1")
+        uploaded_file.seek(0)
+        df = pd.read_csv(io.StringIO(uploaded_file.getvalue().decode('latin-1')), sep=";")
 
     st.subheader("📋 Prévia dos Dados")
     st.dataframe(df.head())
